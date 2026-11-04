@@ -1,10 +1,59 @@
 # BLOKE
 
-**Back the work. Short the noise.** BLOKE is a test-money exchange on Monad testnet for going long or short a *person*. Every person, or "Bloke", has three perpetual markets priced by a live **Human Capital Index**: the blend `$NAME`, `.HYPE` for attention and `.WORK` for what they ship. A two-deck pool is the counterparty to every trade. A person can **raise** from backers, add **proof of work**, and **graduate** to their own token with a locked pool.
+**Back the work. Short the noise.**
 
-> Testnet only. tUSDC and tBLOKE have no value. The contracts are unaudited.
+BLOKE is a market for people who build. You can back someone whose work you believe in, or bet against someone who is all talk, and the price moves with what they actually do.
 
-Spec: the BLOKE MVP PRD (v1.0) plus [`docs/prd/amendments.md`](docs/prd/amendments.md) (A1–A19, each marked Built or Spec). Frontend API guide: [`docs/api.md`](docs/api.md). Research: [`docs/research/market-research.md`](docs/research/market-research.md). Brand: [`brand.md`](brand.md).
+**Try it:** https://bloke-xi.vercel.app (Monad testnet, free test money)
+
+> Testnet only. The money is test money with no value, and the contracts are unaudited.
+
+## What is BLOKE?
+
+Every builder, creator or founder on BLOKE (a "Bloke") has a live score, and you can take a side on it.
+
+- **Back the work.** When someone keeps shipping (code, releases, products, things on chain), their score rises. Back them early and you gain when it does.
+- **Short the noise.** When the buzz around someone runs ahead of what they deliver, you can bet the other way.
+
+Each person's score has two halves, and each half is its own market:
+
+- **WORK** measures what they ship: commits, releases, contracts deployed, verified proof of work.
+- **HYPE** measures the attention around them: mentions and searches.
+
+The main price blends the two, leaning toward WORK. When WORK is well ahead of HYPE, a person is marked **Underrated**. When HYPE runs ahead of WORK, they're marked **Overhyped**. That gap is where the interesting trades are.
+
+## What you can do
+
+**As a trader**
+- Get 10,000 test dollars (tUSDC) in one click. No gas or setup needed.
+- Go long or short any person, or their WORK or HYPE alone. There's no leverage, so you can't lose more than you put in.
+- Your trade fills at the next price update, about a second later. You pay a small fee only on profit when you close.
+- Early, correct calls earn **Rep**, a reputation score shown on the leaderboard.
+
+**As a builder, creator or founder**
+- Claim your profile with your own accounts, so nobody else can speak for you.
+- Add **proof of work** (contracts, repos, releases, papers, products). Contracts you deployed yourself are verified automatically.
+- Earn a share of the trading fees on your markets. Put your own **Skin** in the game to earn more.
+- **Raise** from people who believe in you. It's all or nothing: if the goal isn't met, everyone gets their money back.
+- When you've proven yourself, **launch your own token**. BLOKE creates it, seeds a trading pool that stays locked for a year, rewards your earliest backers, and vests your share over time.
+
+**As a backer of the market**
+- Deposit into the **Pool**, the other side of every trade. The **Floor** earns a fixed rate and is paid first. The **Edge** earns whatever the pool makes and absorbs losses first.
+
+## Why it's different
+
+Most "invest in people" products priced attention, so they rewarded whoever was loudest. BLOKE prices **work**. Its score comes from public signals checked against each person's own history, not from a bonding curve. It's protected against spam and brigading, and nobody can trade their own profile. People appear only if they opt in and claim themselves.
+
+## Learn more
+
+- Product spec and every design decision: [`docs/prd/amendments.md`](docs/prd/amendments.md) (A1–A19)
+- Market research: [`docs/research/market-research.md`](docs/research/market-research.md)
+- For developers building on the API: [`docs/api.md`](docs/api.md)
+- Brand: [`brand.md`](brand.md)
+
+---
+
+The rest of this page is technical: how the system works, how to run it, and where it's deployed.
 
 ---
 

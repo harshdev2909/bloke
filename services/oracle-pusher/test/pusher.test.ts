@@ -75,6 +75,19 @@ describe("Pusher", () => {
     expect(await p.tick(900)).toBe(false);
   });
 
+  it("rate-limits catch-up pushes and gives up on a lag that never clears", async () => {
+    const chain = new FakeChain();
+    chain.lag = 1; // e.g. pinned against the 24 h band: never clears
+    const cfg = { ...DEFAULT_PUSHER_CONFIG, heartbeatMs: 60_000, lagEveryMs: 3_000, maxLagStreak: 2 };
+    const p = new Pusher(new FixedSource([tick(1, 1_500_000)]), chain, signer, cfg);
+    await p.tick(0); // first push
+    expect(await p.tick(1_000)).toBe(false); // too soon for a catch-up push
+    expect(await p.tick(3_000)).toBe(true); // lag 1
+    expect(await p.tick(6_000)).toBe(true); // lag 2
+    expect(await p.tick(9_000)).toBe(false); // streak spent: wait for the heartbeat or a real change
+    expect(await p.tick(66_000)).toBe(true); // heartbeat
+  });
+
   it("pushes immediately with pending engine orders and settles them in the same tx", async () => {
     const chain = new FakeChain();
     let pending: bigint[] = [];

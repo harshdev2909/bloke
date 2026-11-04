@@ -86,6 +86,14 @@ describe("frontend API", () => {
   });
   afterAll(async () => {
     stream?.close();
+    // Hide this run's listing from the floor and raise pages (it stays on chain and indexed).
+    if (claimedTicker) {
+      await fetch(`${API}/v1/admin/blokes/${claimedTicker}/hidden`, {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-admin-token": env("ADMIN_API_TOKEN") },
+        body: JSON.stringify({ hidden: true }),
+      }).catch(() => undefined);
+    }
     mock?.close();
     // Remove the Bloke this run listed so staging's floor doesn't fill with test profiles.
     if (listedId !== undefined) {

@@ -13,7 +13,7 @@ export function registerGraduationReads(app: FastifyInstance, ctx: Ctx) {
 
   /** Every launched (graduated) token, newest first. */
   app.get("/v1/graduations", async () => {
-    const rows = (await ctx.db.query<{ id: number; ticker: string; name: string; archetype: string | null }>(`SELECT id, ticker, name, archetype FROM blokes WHERE status = 'graduated' ORDER BY id DESC`)).rows;
+    const rows = (await ctx.db.query<{ id: number; ticker: string; name: string; archetype: string | null }>(`SELECT id, ticker, name, archetype FROM blokes WHERE status = 'graduated' AND NOT hidden ORDER BY id DESC`)).rows;
     const data = [];
     for (const r of rows) {
       const g = await graduationView(ctx, r.id);

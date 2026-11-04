@@ -65,13 +65,13 @@ const RANGES = {
 
 export function registerReads(app: FastifyInstance, ctx: Ctx) {
   app.get("/v1/blokes", async () => {
-    const rows = (await ctx.db.query<BlokeRow>(`${BLOKES_SQL} ORDER BY b.id`)).rows;
+    const rows = (await ctx.db.query<BlokeRow>(`${BLOKES_SQL} WHERE NOT b.hidden ORDER BY b.id`)).rows;
     return { data: await summaries(ctx, rows), meta: meta({ index: "on-chain", change1h: "indexed", profile: "indexed" }) };
   });
 
   /** The archetype catalogue with how many Blokes on the floor belong to each. */
   app.get("/v1/archetypes", async () => {
-    const rows = (await ctx.db.query<BlokeRow>(`${BLOKES_SQL} WHERE b.status <> 'delisted'`)).rows;
+    const rows = (await ctx.db.query<BlokeRow>(`${BLOKES_SQL} WHERE b.status <> 'delisted' AND NOT b.hidden`)).rows;
     const count = new Map<string, number>();
     for (const r of rows) {
       const a = r.archetype ?? deriveArchetype(r.source_kinds ?? []);

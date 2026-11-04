@@ -317,6 +317,17 @@ export function registerActions(app: FastifyInstance, ctx: Ctx) {
     return { data: { blokeId: id, ticker: body.ticker, wallet, nonce: nonce.toString(), expiry: expiry.toString(), signature } };
   });
 
+  /** Hides or shows a Bloke on the floor and raise lists (test listings, abandoned demos). */
+  app.post("/v1/admin/blokes/:ticker/hidden", async (req) => {
+    const token = req.headers["x-admin-token"];
+    if (!ctx.env.ADMIN_API_TOKEN || token !== ctx.env.ADMIN_API_TOKEN) throw forbidden("admin_only", "Admin token required.");
+    const { ticker: t } = z.object({ ticker }).parse(req.params);
+    const { hidden } = z.object({ hidden: z.boolean() }).parse(req.body);
+    const b = await blokeByTicker(ctx, t);
+    await ctx.db.query(`UPDATE blokes SET hidden = $2 WHERE id = $1`, [b.id, hidden]);
+    return { data: { blokeId: b.id, hidden } };
+  });
+
   /** Sets a Bloke's archetype (null clears it, so it is derived from the sources again). */
   app.post("/v1/admin/blokes/:ticker/archetype", async (req) => {
     const token = req.headers["x-admin-token"];

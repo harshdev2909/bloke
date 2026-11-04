@@ -113,7 +113,7 @@ export default function RaisePage() {
       )}
 
       <div className="mt-16">
-        <HallOfFounders title="Founders who raised before" />
+        <HallOfFounders />
       </div>
 
       {past.length > 0 && (

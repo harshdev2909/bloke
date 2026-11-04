@@ -54,7 +54,7 @@ function view(r: RaiseRow): RaiseView {
 /** Raises (amendment A18): open and recent raises, and one Bloke's latest with a wallet's commitment. */
 export function registerRaiseReads(app: FastifyInstance, ctx: Ctx) {
   app.get("/v1/raises", async () => {
-    const rows = await ctx.db.query<RaiseRow>(`${SQL} ORDER BY (r.state = 'open' AND r.deadline > now()) DESC, r.id DESC LIMIT 50`);
+    const rows = await ctx.db.query<RaiseRow>(`${SQL} WHERE NOT b.hidden ORDER BY (r.state = 'open' AND r.deadline > now()) DESC, r.id DESC LIMIT 50`);
     return { data: rows.rows.map(view), meta: meta({ raises: "indexed" }) };
   });
 

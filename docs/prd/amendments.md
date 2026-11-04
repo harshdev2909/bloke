@@ -198,6 +198,15 @@ The index library supports disabled sources: their weight is renormalised across
 6. **Hall of founders.** The Founder archetype shows historical founders (public-domain portraits, stippled). They are not Blokes and can't be traded; living people appear only by listing and claiming themselves (A12).
 7. Indexed into `raises` and `raise_events`. Served at `/v1/raises` and `/v1/raises/:ticker?wallet=`; the live numbers come from chain.
 
+## A19. Proof of work, simulated (§4, §9) · Built (simulation)
+
+**Problem.** A person has no way to point at what they shipped beyond the sources the listing was built from.
+
+**Rule.**
+1. A claimed person adds, updates and retracts proof-of-work items: contract, repo, release, paper, product, post. Each has a title and a link, up to 50 per profile. They are stored off-chain (`pow_items`) for now, and a retracted item is kept.
+2. **Verification.** A contract item is *verified* when its deployment tx (on Monad testnet) was sent by the claimed wallet or a verified deployer address. A GitHub repo is verified when its owner is a GitHub login linked to the wallet. Everything else is *self-reported*; a failed check reads *not verified* with the reason.
+3. **Simulated effect.** The profile shows "+N WORK (simulated)": 2 points per verified item, 0.5 per self-reported item, capped at 20. It is not fed to the oracle. Wiring verified items into the WORK leg (as on-chain events or releases) is the follow-up, together with an on-chain anchor.
+
 ## Open questions after v1.1
 
 Resolved: Q4 (opt-in only for the event). Partially resolved: Q2 (X via pay-per-use, ~$150–750/month; HYPE can launch on X + Search). Still open: Q1 submission date, Q3 embedded-wallet provider, Q5 escrow expiry, Q6–Q7 mainnet economics, Q8 the public-builder list.

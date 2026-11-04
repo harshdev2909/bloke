@@ -11,6 +11,13 @@ export interface PusherConfig {
   maxEntries: number;
   /** Consecutive failures before alerting. */
   alertAfterFailures: number;
+  /** Minimum gap between catch-up (lag) pushes; 0 = back to back (A1.4). */
+  lagEveryMs?: number;
+  /**
+   * Catch-up pushes in a row before giving up until the raw values move again. A value pinned by
+   * the 24 h band lags forever; without a cap every tick would push (and pay gas) for nothing.
+   */
+  maxLagStreak?: number;
 }
 
 export const DEFAULT_PUSHER_CONFIG: PusherConfig = {
@@ -40,6 +47,7 @@ export class Pusher {
   private lastTsMs = 0n;
   private failures = 0;
   private lagging = false;
+  private lagStreak = 0;
   private inFlight = false;
 
   constructor(
@@ -117,15 +125,18 @@ export class Pusher {
   private reason(live: IndexTick[], nowMs: number, ordersPending: boolean): PushReason | undefined {
     if (live.length === 0) return undefined;
     if (ordersPending) return "orders";
-    // Amendment A1.4: while any applied value lags its raw value, push back to back to clear it.
-    if (this.lagging) return "lag";
-    if (nowMs - this.lastPushMs >= this.cfg.heartbeatMs) return "heartbeat";
-    for (const t of live) {
+    const changed = live.some((t) => {
       const p = this.lastPushed.get(t.blokeId);
-      if (!p) return "change";
-      const moved = Math.max(Math.abs(t.b - p.b), Math.abs(t.h - p.h), Math.abs(t.w - p.w));
-      if (moved >= this.cfg.minChangeScaled) return "change";
+      return !p || Math.max(Math.abs(t.b - p.b), Math.abs(t.h - p.h), Math.abs(t.w - p.w)) >= this.cfg.minChangeScaled;
+    });
+    if (changed) this.lagStreak = 0; // new raw values: catching up is worth paying for again
+    // Amendment A1.4: while any applied value lags its raw value, push to clear it (rate-limited).
+    if (this.lagging && this.lagStreak < (this.cfg.maxLagStreak ?? Infinity) && nowMs - this.lastPushMs >= (this.cfg.lagEveryMs ?? 0)) {
+      this.lagStreak += 1;
+      return "lag";
     }
+    if (nowMs - this.lastPushMs >= this.cfg.heartbeatMs) return "heartbeat";
+    if (changed) return "change";
     return undefined;
   }
 }

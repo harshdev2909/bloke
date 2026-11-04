@@ -23,6 +23,8 @@ import { RedisIndexSource } from "./redis-source.js";
  *   HEARTBEAT_MS          push at least this often (default 30000)
  *   LOOKBACK_BLOCKS       how far back to scan for pending orders on start (default 2500)
  *   SYNTH_VOL             synthetic walk volatility per √minute in z-space (default 0.01)
+ *   LAG_EVERY_MS          minimum gap between catch-up pushes (default 0 = back to back)
+ *   MAX_LAG_STREAK        catch-up pushes in a row before waiting for new raw values (default unlimited)
  *   SOURCE                "synthetic" (default, P0/P1) or "compute": ticks from index-compute via REDIS_URL (P3)
  */
 function env(name: string, fallback?: string): string {
@@ -84,6 +86,8 @@ async function main() {
       ...DEFAULT_PUSHER_CONFIG,
       minChangeScaled: Number(env("MIN_CHANGE", String(DEFAULT_PUSHER_CONFIG.minChangeScaled))),
       heartbeatMs: Number(env("HEARTBEAT_MS", String(DEFAULT_PUSHER_CONFIG.heartbeatMs))),
+      lagEveryMs: Number(env("LAG_EVERY_MS", "0")),
+      maxLagStreak: process.env.MAX_LAG_STREAK ? Number(process.env.MAX_LAG_STREAK) : Infinity,
     },
     {
       pushed: (i) => log({ msg: "pushed", ...i }),

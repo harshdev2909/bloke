@@ -1,0 +1,37 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: contracts } }
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: recursive }
+      - uses: foundry-rs/foundry-toolchain@v1
+        with: { version: stable }
+      - run: forge build --sizes
+      - run: FOUNDRY_PROFILE=ci forge test
+      - run: forge snapshot --check || forge snapshot
+  ts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm -r typecheck
+      - run: pnpm -r test
+  schema:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env: { POSTGRES_PASSWORD: postgres }
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - run: psql -v ON_ERROR_STOP=1 -h localhost -U postgres -f db/migrations/0001_init.sql
+        env: { PGPASSWORD: postgres }

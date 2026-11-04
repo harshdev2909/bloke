@@ -1,0 +1,42 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+solc_version = "0.8.28"
+evm_version = "prague"
+optimizer = true
+optimizer_runs = 200
+# Monad allows 128 KB contracts (amendment A10f); Anvil needs --code-size-limit 131072.
+code_size_limit = 131072
+via_ir = true
+bytecode_hash = "none"
+# Long deterministic handler runs exceed the 2^30 default per-test gas cap.
+gas_limit = "18446744073709551615"
+fs_permissions = [{ access = "read-write", path = "./deployments" }, { access = "read", path = "./out" }]
+remappings = [
+  "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+  "@prb/math/=lib/prb-math/src/",
+  "forge-std/=lib/forge-std/src/",
+]
+
+[fuzz]
+runs = 1000
+
+[invariant]
+runs = 256
+depth = 100
+fail_on_revert = false
+
+[profile.ci.fuzz]
+runs = 10000
+
+[profile.ci.invariant]
+runs = 10000
+depth = 200
+
+[rpc_endpoints]
+monad_testnet = "${MONAD_TESTNET_RPC}"
+anvil = "http://127.0.0.1:8545"
+
+[lint]
+lint_on_build = false

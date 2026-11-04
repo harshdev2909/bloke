@@ -1,0 +1,57 @@
+# Local/staging stack. Secrets come only from env_file (.env.testnet / .env.db, gitignored; see
+# .env.example). Never interpolate keys into `environment:`: it overrides env_file.
+# `docker compose up --scale api=3` runs three stateless API replicas behind any load balancer.
+x-common: &common
+  build: { context: ., args: { SERVICE: api } }
+  restart: unless-stopped
+  env_file: [.env.testnet, .env.db]
+  environment:
+    ADDRESSES: /app/contracts/deployments/10143-staging.json
+    REDIS_URL: redis://redis:6379
+    RPC_URLS: ${RPC_URLS:-https://testnet-rpc.monad.xyz,https://rpc-testnet.monadinfra.com}
+
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+  indexer:
+    <<: *common
+    build: { context: ., args: { SERVICE: indexer } }
+    depends_on: [redis]
+
+  api:
+    <<: *common
+    build: { context: ., args: { SERVICE: api } }
+    depends_on: [redis, indexer]
+    environment:
+      ADDRESSES: /app/contracts/deployments/10143-staging.json
+      REDIS_URL: redis://redis:6379
+      RPC_URLS: ${RPC_URLS:-https://testnet-rpc.monad.xyz,https://rpc-testnet.monadinfra.com}
+      SIWE_DOMAIN: ${SIWE_DOMAIN:-localhost:3000}
+      SIWE_URI: ${SIWE_URI:-http://localhost:3000}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+    ports: ["8080"]
+
+  oracle-pusher:
+    <<: *common
+    build: { context: ., args: { SERVICE: oracle-pusher } }
+    environment:
+      ADDRESSES: /app/contracts/deployments/10143-staging.json
+      RPC_URLS: ${RPC_URLS:-https://testnet-rpc.monad.xyz,https://rpc-testnet.monadinfra.com}
+      BLOKE_IDS: ${BLOKE_IDS:-1,2}
+      HEARTBEAT_MS: "30000"
+      MIN_CHANGE: "1000000"
+      TICK_MS: "300"
+
+  keeper:
+    <<: *common
+    build: { context: ., args: { SERVICE: keeper } }
+    environment:
+      ADDRESSES: /app/contracts/deployments/10143-staging.json
+      RPC_URLS: ${RPC_URLS:-https://testnet-rpc.monad.xyz,https://rpc-testnet.monadinfra.com}
+      STATE_DIR: /app/.state
+    volumes: [keeper-state:/app/.state]
+
+volumes:
+  keeper-state:

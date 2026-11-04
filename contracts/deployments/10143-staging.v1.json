@@ -1,0 +1,13 @@
+{
+  "accessManager": "0x15deBf1dc3b0064C1D5FB66fA753fc75E776FEB6",
+  "chainId": 10143,
+  "engine": "0x40F6bAbEB00a0f49FE63DFbcEd27f8EB277E3485",
+  "oracle": "0x4CC41134ae0334A2f50C6C049cDDfa2b5fe6C552",
+  "pool": "0x32cDC2b5a368bFb57F44C723D68A56014F14aDF6",
+  "protocolConfig": "0xae286C0149D9958291dC80DFfD2e122F972580cc",
+  "registry": "0xfB83d2508b6C4D4beF08a6a578beAA4712C51d96",
+  "settler": "0xD9e9BF72A4F531105b33C402eC0ebbd32e12954b",
+  "staging": true,
+  "startBlock": 76819878,
+  "tusdc": "0x51A95d07fb5F34282872E842359b7140958b3E83"
+}

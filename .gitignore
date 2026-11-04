@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+contracts/out/
+contracts/cache/
+contracts/broadcast/
+coverage/
+.DS_Store
+.logs/
+.state/
+.next/
+next-env.d.ts

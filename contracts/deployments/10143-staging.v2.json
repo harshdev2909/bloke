@@ -1,0 +1,13 @@
+{
+  "chainId": 10143,
+  "startBlock": 76854066,
+  "staging": true,
+  "accessManager": "0x241c7e142b5831d93ae7e72e677f0cf916495c80",
+  "protocolConfig": "0x85d34a926b837104bcc0504a4322090baa657d69",
+  "tusdc": "0x7bc55b96748735b191ab563accd81765be10f1a8",
+  "oracle": "0x553abe12945cd0b17e3168411e9de5f28f2fc326",
+  "registry": "0x18eda656c5b3dd18644f8c991a73f91036a19322",
+  "pool": "0xf3370b82c2ade156b8c711d637bb41d3fa523f5c",
+  "engine": "0x2a4e1bfde7c0db2f747901644eec092d544d8277",
+  "settler": "0xf648ecccc58f0f121f2e484311c5a347d347788a"
+}

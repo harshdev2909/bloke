@@ -1,0 +1,19 @@
+{
+  "name": "@bloke/integration",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "echo 'run with: pnpm integration (needs a chain + services; see README)'",
+    "integration": "vitest run --no-file-parallelism --testTimeout 600000 --hookTimeout 600000"
+  },
+  "dependencies": {
+    "@bloke/shared": "workspace:*",
+    "pg": "^8.13.0",
+    "viem": "^2.40.0",
+    "@bloke/sdk": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.0"
+  }
+}

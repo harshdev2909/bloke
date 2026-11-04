@@ -8,22 +8,6 @@ Spec: the BLOKE MVP PRD (v1.0) plus [`docs/prd/amendments.md`](docs/prd/amendmen
 
 ---
 
-## Demo in five minutes
-
-| # | Where | What to show |
-|---|---|---|
-| 1 | Header → **Connect** | Wallet picker (MetaMask first); "Switch to Monad" adds chain 10143 if the wallet doesn't have it |
-| 2 | **Get tUSDC** (`/me`) | Gasless faucet: 10,000 tUSDC plus a one-time MON drip, through a relayer |
-| 3 | **Floor** (`/`) | Live index of everyone, **Archetypes** (stippled sculptures; click one to filter), the floor list, live trades. Pick *V · Founder* to see the **Hall of founders** |
-| 4 | `/b/DEMO2` | **Signals** from real sources (Hacker News + on-chain), trade ticket (long/short, Underrated spread), markets, graduation checklist, archetype card |
-| 5 | Ticket → **Long** | Fills at the next index push, about a second later; equity updates live over WebSocket; close from **Portfolio** |
-| 6 | **Pool** (`/pool`) | Floor / Reserve / Edge capital stack, price per EDGE, subordination, hourly settlements, deposit and redeem |
-| 7 | **Raise** (`/raise`) | **Start your raise** (list → claim → open; two wallet confirmations), back **$LYRA**, see **Launched** tokens |
-| 8 | `/b/ORION` | A token that **graduated live on testnet**: price in tBLOKE/tUSDC, 500M pool with LP locked to 2027, vesting, airdrop and backer claims, buy/sell |
-| 9 | Your profile | **Proof of work**: add a contract (verified when your wallet deployed it), a repo, a release, a paper; edit or remove items |
-
----
-
 ## How it works
 
 ```mermaid
